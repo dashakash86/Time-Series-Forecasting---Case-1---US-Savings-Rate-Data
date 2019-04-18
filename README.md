@@ -14,6 +14,6 @@ Saving rate is defined as personal saving as a percentage of total disposable pe
 In this case study we analyze 100 quarterly observations of the U.S. saving rate for the years 1955~1979. The data has been seasonally adjusted prior to publication by the U.S. Department of Commerce, which means we do not need to separately identify any non-stationary property in the time series. The tool used is SAS.
 
 In this study we,
- Identify the right model (AR / MA / ARMA) based on correlations from the data,
- Estimate the parameters (p, q) so that we have the right residual diagnostics and the simplest possible model, and
- Forecast the savings rate for the next two years, conditional on the past observed data.
+* Identify the right model (AR / MA / ARMA) based on correlations from the data,
+* Estimate the parameters (p, q) so that we have the right residual diagnostics and the simplest possible model, and
+* Forecast the savings rate for the next two years, conditional on the past observed data.
