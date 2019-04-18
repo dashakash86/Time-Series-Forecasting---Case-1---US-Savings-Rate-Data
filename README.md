@@ -1,2 +1,2 @@
 # Time-Series-Forecasting---Case-1---US-Savings-Rate-Data
-From raw empirical sample data, identify model, estimate parameters, and forecast into future.
+An analysis on US savings rate data (published by the U.S Dept. of Commerce) to identify the adequate time series model, estimate the parameters, and forecast two years into the future. Tool used: SAS
