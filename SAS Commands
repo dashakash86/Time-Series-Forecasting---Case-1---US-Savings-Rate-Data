@@ -1,0 +1,57 @@
+/*Read in the data*/
+
+DATA CASE;
+DO YEAR=1955 TO 1979;
+   DO QUARTER=1 TO 4;
+      DATE=YYQ(YEAR,QUARTER);
+      INPUT SAVING @@;ONE=1; OUTPUT;
+   END;
+END;
+KEEP DATE SAVING ONE; FORMAT DATE YYQ4.;
+*LABEL SAVING=(PERSONAL SAVING/DISPOSABLE INCOME)*100;
+CARDS;
+4.9 5.2 5.7 5.7 6.2 6.7 6.9 7.1 6.6 7 6.9 6.4 6.6 6.4 7 7.3 6 6.3 4.8
+5.3 5.4 4.7 4.9 4.4 5.1 5.3 6 5.9 5.9 5.6 5.3 4.5 4.7 4.6 4.3 5 5.2
+6.2 5.8 6.7 5.7 6.1 7.2 6.5 6.1 6.3 6.4 7 7.6 7.2 7.5
+7.8 7.2 7.5 5.6 5.7 4.9 5.1 6.2 6 6.1 7.5 7.8 8 8 8.1 7.6 7.1
+6.6 5.6 5.9 6.6 6.8 7.8 7.9 8.7 7.7 7.3 6.7 7.5 6.4 9.7 7.5 7.1 6.4
+6 5.7 5 4.2 5.1 5.4 5.1 5.3 5 4.8 4.7 5 5.4 4.3 3.5
+;
+PROC PRINT; RUN;
+
+
+/*Identifying model*/
+proc arima data = CASE;
+identify var = SAVING;
+run;
+/*From the plot...PACF cuts off at 1 and ACF exponentially declines...we will try fitting AR(1)*/
+
+/*Fit AR(1)*/
+proc arima data = CASE;
+identify var = SAVING;
+estimate p = 1 plot;
+run;
+/*We see that the parameter AR1,1 comes out to be significant. However, the ACF of residuals doesn't follow 
+the properties of a white noise yet. Since it cuts-off at 2, we feel we need to add an MA(2) component. 
+This is also validated from the residual autocorrelation table. */
+
+/*Fit ARMA(1,2)*/
+proc arima data = CASE;
+identify var = SAVING;
+estimate p = 1 q = 2 plot;
+run;
+/*From the output we see that all parameters except MA1,1 are significant. ACF and PACF of residuals
+behave almost like those of white noise. However, we should simplify the model here.*/
+
+/*Fit ARMA(1,2) suppressing MA1,1*/
+proc arima data = CASE;
+identify var = SAVING;
+estimate p = 1 q = (2) plot;
+run;
+
+/*Forecast for next two years*/
+proc arima data = CASE;
+identify var = SAVING;
+estimate p = 1 q = (2) plot;
+forecast lead = 8;
+run;
